@@ -58,7 +58,6 @@ jobs:
       with:
         toolchain: ${{ matrix.rust-toolchain }}
         components: rust-src, clippy, rustfmt
-        targets: x86_64-unknown-none, riscv64gc-unknown-none-elf, aarch64-unknown-none, aarch64-unknown-none-softfloat
     - uses: actions/checkout@v4
       if: github.repository != env.PRJ_DIR
       with:
@@ -92,7 +91,6 @@ jobs:
       with:
         toolchain: ${{ matrix.rust-toolchain }}
         components: rust-src, clippy, rustfmt
-        targets: x86_64-unknown-none, riscv64gc-unknown-none-elf, aarch64-unknown-none, aarch64-unknown-none-softfloat
     - uses: actions/checkout@v4
       if: github.repository != env.PRJ_DIR
       with:
@@ -103,7 +101,7 @@ jobs:
       if: github.repository != env.PRJ_DIR
       run: |
         cargo install dependencies-patch
-        dependencies-patch -c . -n ${{ inputs.CallerPackage }} -t git --git-repo ${{ github.repository }} ${{ github.sha }}
+        dependencies-patch -c . -n ${{ inputs.CallerPackage }} -t git --git-repo ${{ github.repository }} --commit ${{ github.sha }}
     - name: Test for the default target
       run: cargo run
   
