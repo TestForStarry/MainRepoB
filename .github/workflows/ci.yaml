@@ -69,7 +69,7 @@ jobs:
       if: github.repository != env.PRJ_DIR
       run: |
         cargo install dependencies-patch
-        dependencies-patch -c ${{ env.WORKING_DIRECTORY }} -n ${{ inputs.CallerPackage }} -t git --git-repo ${{ github.repository }} ${{ github.sha }}
+        dependencies-patch -c ${{ env.WORKING_DIRECTORY }} -n ${{ inputs.CallerPackage }} -t git --git-repo ${{ github.repository }} --commit ${{ github.sha }}
     - name: Clippy for the default target
       run: cargo clippy --all-targets --all-features -- -D warnings
 
