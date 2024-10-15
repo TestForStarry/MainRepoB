@@ -13,14 +13,6 @@ on:
         description: 'The package to call the workflow'
         required: true
         type: string
-      CallerRepository:
-        description: 'The repository of the caller package'
-        required: true
-        type: string
-      CallerCommit:
-        description: 'The commit of the repository to call the workflow'
-        required: true
-        type: string
       TopBranch:
         description: 'The branch of the main repository'
         required: false
