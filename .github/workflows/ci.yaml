@@ -62,15 +62,14 @@ jobs:
     - uses: actions/checkout@v4
       if: github.repository != env.PRJ_DIR
       with:
-        repository: ${{ inputs.CallerRepository }}
-        ref: ${{ inputs.CallerCommit }}
+        repository: ${{ env.PRJ_DIR }}
+        ref: ${{ inputs.TopBranch }}
         path: ${{ env.WORKING_DIRECTORY }}
     - name: Update version for external test
-      working-directory: ${{ github.workspace }}
       if: github.repository != env.PRJ_DIR
       run: |
         cargo install dependencies-patch
-        dependencies-patch -c ${{ env.WORKING_DIRECTORY }} -n ${{ inputs.CallerPackage }} -t git --git-repo ${{ github.repository }} --commit ${{ github.sha }}
+        dependencies-patch -c . -n ${{ inputs.CallerPackage }} -t git --git-repo ${{ github.repository }} --commit ${{ github.sha }}
     - name: Clippy for the default target
       run: cargo clippy --all-targets --all-features -- -D warnings
 
@@ -101,11 +100,10 @@ jobs:
         ref: ${{ inputs.CallerCommit }}
         path: ${{ env.WORKING_DIRECTORY }}
     - name: Update version for external test
-      working-directory: ${{ github.workspace }}
       if: github.repository != env.PRJ_DIR
       run: |
         cargo install dependencies-patch
-        dependencies-patch -c ${{ env.WORKING_DIRECTORY }} -n ${{ inputs.CallerPackage }} -t git --git-repo ${{ github.repository }} ${{ github.sha }}
+        dependencies-patch -c . -n ${{ inputs.CallerPackage }} -t git --git-repo ${{ github.repository }} ${{ github.sha }}
     - name: Test for the default target
       run: cargo run
   
