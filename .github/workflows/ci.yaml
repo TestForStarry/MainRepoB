@@ -64,6 +64,7 @@ jobs:
       with:
         repository: ${{ inputs.CallerRepository }}
         ref: ${{ inputs.CallerCommit }}
+        path: ${{ env.WORKING_DIRECTORY }}
     - name: Update version for external test
       working-directory: ${{ github.workspace }}
       if: github.repository != env.PRJ_DIR
@@ -98,6 +99,7 @@ jobs:
       with:
         repository: ${{ inputs.CallerRepository }}
         ref: ${{ inputs.CallerCommit }}
+        path: ${{ env.WORKING_DIRECTORY }}
     - name: Update version for external test
       working-directory: ${{ github.workspace }}
       if: github.repository != env.PRJ_DIR
