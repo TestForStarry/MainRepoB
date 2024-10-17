@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-TestRepoB1 = { git = "https://github.com/TestForStarry/TestRepoB1.git" }
+test_repo_b1 = { git = "https://github.com/TestForStarry/TestRepoB1.git" }

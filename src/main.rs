@@ -1,6 +1,6 @@
-extern crate TestRepoB1;
+extern crate test_repo_b1;
 
 fn main() {
     println!("Hello, world!");
-    TestRepoB1::foo();
+    test_repo_b1::foo();
 }

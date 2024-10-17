@@ -6,10 +6,10 @@ version = 4
 name = "MainRepoB"
 version = "0.1.0"
 dependencies = [
- "TestRepoB1",
+ "test_repo_b1",
 ]
 
 [[package]]
-name = "TestRepoB1"
+name = "test_repo_b1"
 version = "0.1.0"
-source = "git+https://github.com/TestForStarry/TestRepoB1.git#6b715e771a028bad80e10c4249438be4816f1503"
+source = "git+https://github.com/TestForStarry/TestRepoB1.git#505617c82e192e8352889143de7bbc7e996d8f63"
