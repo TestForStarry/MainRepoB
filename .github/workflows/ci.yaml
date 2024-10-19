@@ -29,6 +29,9 @@ jobs:
     - uses: actions/checkout@v4
       if: inputs.CallerPackage == ''
     - uses: actions/checkout@v4
+      with:
+        repository: Starry-OS/Starry
+    - uses: actions/checkout@v4
       if: inputs.CallerPackage != ''
       with:
         repository: ${{ env.PRJ_REPO }}
