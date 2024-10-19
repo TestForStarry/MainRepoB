@@ -4,11 +4,6 @@ on:
   pull_request:
   workflow_call:
     inputs:
-      TopTestDirectory:
-        description: 'The directory where the main repository will be placed'
-        required: false
-        default: '.tmp-test'
-        type: string
       CallerPackage:
         description: 'The package to call the workflow'
         required: true
@@ -23,76 +18,57 @@ env:
   PRJ_REPO: "TestForStarry/MainRepoB"
 
 jobs:
-  prepare_for_external_test:
-    runs-on: ubuntu-latest
-    steps:
-      - id: set-directory
-        run: echo "TopTestDirectory=${{ inputs.CallerPackage == '' && '.' || inputs.TopTestDirectory }}" >> $GITHUB_OUTPUT
-    outputs:
-      WORKING_DIRECTORY: ${{ steps.set-directory.outputs.TopTestDirectory }} 
   clippy:
-    needs: prepare_for_external_test
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix: 
         rust-toolchain: [nightly]
-    env:
-      WORKING_DIRECTORY: ${{ needs.prepare_for_external_test.outputs.WORKING_DIRECTORY }}
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIRECTORY }}
 
     steps:
     - uses: actions/checkout@v4
-    - uses: dtolnay/rust-toolchain@stable
-      with:
-        toolchain: ${{ matrix.rust-toolchain }}
-        components: rust-src, clippy, rustfmt
+      if: inputs.CallerPackage == ''
     - uses: actions/checkout@v4
       if: inputs.CallerPackage != ''
       with:
         repository: ${{ env.PRJ_REPO }}
         ref: ${{ inputs.TopBranch }}
-        path: ${{ env.WORKING_DIRECTORY }}
     - name: Update version for external test
       if: inputs.CallerPackage != ''
       run: |
         cargo install dependencies-patch
         dependencies-patch -c . -n ${{ inputs.CallerPackage }} -t git --git-repo ${{ github.repository }} --commit ${{ github.sha }}
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: ${{ matrix.rust-toolchain }}
+        components: rust-src, clippy, rustfmt
     - name: Clippy for the default target
       run: cargo clippy --all-targets --all-features -- -D warnings
 
   test:
-    needs: prepare_for_external_test
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix: 
         rust-toolchain: [nightly]
-    env:
-      WORKING_DIRECTORY: ${{ needs.prepare_for_external_test.outputs.WORKING_DIRECTORY }}
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-
     steps:
     - uses: actions/checkout@v4
-    - uses: dtolnay/rust-toolchain@stable
-      with:
-        toolchain: ${{ matrix.rust-toolchain }}
-        components: rust-src, clippy, rustfmt
+      if: inputs.CallerPackage == ''
     - uses: actions/checkout@v4
       if: inputs.CallerPackage != ''
       with:
         repository: ${{ env.PRJ_REPO }}
         ref: ${{ inputs.TopBranch }}
-        path: ${{ env.WORKING_DIRECTORY }}
     - name: Update version for external test
       if: inputs.CallerPackage != ''
       run: |
         cargo install dependencies-patch
         dependencies-patch -c . -n ${{ inputs.CallerPackage }} -t git --git-repo ${{ github.repository }} --commit ${{ github.sha }}
+
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: ${{ matrix.rust-toolchain }}
+        components: rust-src, clippy, rustfmt
     - name: Test for the default target
       run: cargo run
   
